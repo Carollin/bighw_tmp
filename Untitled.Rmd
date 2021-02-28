@@ -1,0 +1,78 @@
+---
+title: "bighw"
+author: "Chenyi Lin"
+date: "2/28/2021"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+library(ggplot2)
+```
+
+####Question: What time of day should you fly if you want to avoid delays as much as possible? Arrive delay.  
+Overview:time of the day  
+```{r}
+time <- flights%>%
+  group_by(hour)%>%
+  summarise(time_mean=mean(dep_delay,na.rm = TRUE))
+
+```
+
+```{r}
+ggplot(time, aes(hour,time_mean))+
+  geom_point()
+```
+
+Introduction:  
+Withouting relating any factors(flights, airplane...), if you want to avoid delay as less as possible, you can choose to take the flight between 5:00am-12:00pm, between thsi peried, the average of flights'delay are less than 10 minutes.  
+
+####1. carrier
+Introduction:  
+In overview, we already known the time between 5-12 in the morning has the less delay time. So, in part 1, I want to know which airlines that we should choose at these period.  
+
+```{r}
+carrierf<- flights%>%
+  filter(hour>=5|hour<=10)%>%
+  group_by(carrier)%>%
+  summarise(mean_dep_delay=mean(dep_delay,na.rm = TRUE))
+```
+```{r}
+ggplot(carrierf,aes(x=mean_dep_delay,y=carrier))+
+  geom_point()
+```
+##summary:  
+In the period 5-12 in the morning, we can choose AS,HA, and Us airlines.These only delay abut 5 minutes.   
+
+####2. airports   
+Same as part 1. We already known the time between 5-12 in the morning has the less delay time. So, in part 1, I want to know which airports that we should choose at these period.   
+
+```{r}
+flights%>%
+  filter(hour>=5|hour<=10)%>%
+  group_by(origin)%>%
+  summarise(mean_dep_delay=mean(dep_delay,na.rm = TRUE))
+```
+##Summary:  
+In the period 5-12 in the morning, there is no big differnce between the three origins' means of the delay time. But the flights at LGA has the less delay time, whcih is 12.3 minutes.  
+
+####3. Weather:  
+Same as before. We already known the time between 5-12 in the morning has the less delay time. So, in part 3, how temperature affect delay time.  
+```{r}
+flights2 <- flights %>%
+  left_join(weather)
+flights2
+```
+```{r}
+flights3 <- flights2%>%
+  filter(hour>=5|hour<=10)%>%
+  group_by(temp)%>%
+  summarise(mean_dep_delay=mean(dep_delay,na.rm = TRUE))
+```
+```{r}
+ggplot(flights3,aes(x=temp,y=mean_dep_delay))+
+  geom_point()
+```
+##Summary:  
+From the plot,In the period 5-12 in the morning, we can find that when the temperature is around 50 Fahrenheit, the delay time is less.  
