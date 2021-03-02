@@ -34,7 +34,7 @@ In overview, we already known the time between 5-12 in the morning has the less 
 
 ```{r}
 carrierf<- flights%>%
-  filter(hour>=5|hour<=10)%>%
+  filter(hour>=5 & hour<=10)%>%
   group_by(carrier)%>%
   summarise(mean_dep_delay=mean(dep_delay,na.rm = TRUE))
 ```
@@ -50,7 +50,7 @@ Same as part 1. We already known the time between 5-12 in the morning has the le
 
 ```{r}
 flights%>%
-  filter(hour>=5|hour<=10)%>%
+  filter(hour>=5 & hour<=10)%>%
   group_by(origin)%>%
   summarise(mean_dep_delay=mean(dep_delay,na.rm = TRUE))
 ```
@@ -66,7 +66,7 @@ flights2
 ```
 ```{r}
 flights3 <- flights2%>%
-  filter(hour>=5|hour<=10)%>%
+  filter(hour>=5 & hour<=10)%>%
   group_by(temp)%>%
   summarise(mean_dep_delay=mean(dep_delay,na.rm = TRUE))
 ```
